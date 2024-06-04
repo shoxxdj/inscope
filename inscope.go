@@ -15,17 +15,22 @@ func main(){
     //var input string
 
 	fullDetails:=  flag.Bool("full",false,"Get full details (IP and domain, if not set only print IP)")
-	domainsFile := flag.String("domainsFile","","File containing domains to check")
-	scopeFile := flag.String("scopeFile","","File containing scope ip or CIDR")
+	domainsFile := flag.String("domains","","File containing domains to check")
+	scopeFile := flag.String("scope","","File containing scope ip or CIDR")
 
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "[INSCOPE] : a binary to check if a list of DNS is in a list scope \n")
+		fmt.Fprintf(os.Stderr, "[INSCOPE] : a binary to check if a list of DNS is in a list of IP scope \nYes out of scope is bad.\n")
 		flag.VisitAll(func(f *flag.Flag) {
 			fmt.Fprintf(os.Stderr, "\t-%v: %v\n", f.Name,f.Usage) // f.Name, f.Value
 		})
 	}
 
 	flag.Parse()
+
+	if(*scopeFile=="" || *domainsFile==""){
+		fmt.Println("Define scope and domains files path. One per line.")
+		os.Exit(-1)
+	}
 
 	var data string
 	arrayOfIP := make([]string,0)
